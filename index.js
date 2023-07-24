@@ -36,7 +36,7 @@ async function run() {
       .collection("myCollege");
 
     // to get all colleges
-    app.get("/all-colleges", async (req, res) => {
+    app.get("/colleges", async (req, res) => {
       const result = await collegeCollection.find().toArray();
       res.send(result);
     });
@@ -80,6 +80,33 @@ async function run() {
       const result = await myCollegeCollection.insertOne(data);
       res.send(result);
     });
+
+    // add review
+app.post('/review/:id', async(req, res)=>{
+  const review = req.body.review;
+  const rating = req.body.rating;
+  const id = req.params.id;
+  console.log(review, rating, id);
+  const filter = { _id: new ObjectId(id)};
+  const options = { upsert: true };
+  const updateDoc = {
+    $set: {
+      review: review,
+      rating: rating
+    },
+  };
+  const result = await collegeCollection.updateOne(filter, updateDoc, options);
+  console.log(result);
+  res.send(result);
+})
+
+// get my college data 
+app.get("/my-college/:email", async(req, res)=>{
+  const email = req.params.email;
+  const query = { email: email };
+  const result = await myCollegeCollection.find(query).toArray();
+  res.send(result)
+})
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
