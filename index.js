@@ -36,7 +36,7 @@ async function run() {
       .collection("myCollege");
 
     // to get all colleges
-    app.get("/colleges", async (req, res) => {
+    app.get("/all-colleges", async (req, res) => {
       const result = await collegeCollection.find().toArray();
       res.send(result);
     });
